@@ -1,0 +1,17 @@
+{
+  "name": "H R Furniture — Sofas, Beds, Dining Sets & Wardrobes",
+  "short_name": "H R Furniture",
+  "description": "Premium sofas, beds, dining sets, chairs, wardrobes and mattresses at honest showroom prices. Ready stock, home delivery, warranty.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f3ec",
+  "theme_color": "#3a2a1c",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

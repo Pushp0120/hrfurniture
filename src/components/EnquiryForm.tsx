@@ -1,0 +1,304 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { apiSend } from "@/lib/api";
+import { CheckCircle2, Loader2, LocateFixed, Send } from "lucide-react";
+import { useState } from "react";
+
+const REQUIREMENTS = [
+  "Sofa / Sofa set",
+  "Bed & mattress",
+  "Dining set / table",
+  "Chair / Office chair",
+  "Wardrobe / storage",
+  "Full room combo",
+  "Something else",
+];
+
+/** Exactly 10 digits — ignores spaces, dashes and a +91/0 prefix. */
+function isValidPhone(value: string) {
+  return /^\d{10}$/.test(value.replace(/\D/g, ""));
+}
+
+export function EnquiryForm() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [requirement, setRequirement] = useState<string>("");
+  const [location, setLocation] = useState("");
+  const [message, setMessage] = useState("");
+  const [locating, setLocating] = useState(false);
+  const [locError, setLocError] = useState<string | null>(null);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success">(
+    "idle",
+  );
+  const [error, setError] = useState<string | null>(null);
+
+  const reset = () => {
+    setName("");
+    setPhone("");
+    setEmail("");
+    setRequirement("");
+    setLocation("");
+    setMessage("");
+    setLocError(null);
+  };
+
+  /** Detect the visitor's location via GPS and fill the field with a
+   *  readable area name (reverse-geocoded through OpenStreetMap). */
+  const handleUseGps = () => {
+    setLocError(null);
+    if (!("geolocation" in navigator)) {
+      setLocError("Your browser doesn't support location detection.");
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        const coords = `GPS: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&zoom=14&addressdetails=1`,
+          );
+          if (!res.ok) throw new Error("geocode failed");
+          const data = await res.json();
+          const a = data?.address ?? {};
+          const area =
+            a.neighbourhood || a.suburb || a.village || a.hamlet || a.road || "";
+          const city = a.town || a.city || a.city_district || a.county || "";
+          const state = a.state || "";
+          const place = [area, city, state].filter(Boolean).join(", ");
+          setLocation(
+            place ||
+              String(data.display_name ?? "")
+                .split(",")
+                .slice(0, 3)
+                .join(",")
+                .trim() ||
+              coords,
+          );
+        } catch {
+          // Reverse geocoding failed — still capture the coordinates.
+          setLocation(coords);
+        } finally {
+          setLocating(false);
+        }
+      },
+      (err) => {
+        setLocating(false);
+        if (err.code === err.PERMISSION_DENIED) {
+          setLocError("Location permission denied — type your area instead.");
+        } else if (err.code === err.TIMEOUT) {
+          setLocError("Couldn't detect your location in time — type it instead.");
+        } else {
+          setLocError("Couldn't detect your location — type your area instead.");
+        }
+      },
+      { enableHighAccuracy: false, timeout: 12000, maximumAge: 60000 },
+    );
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (status === "submitting") return;
+    setError(null);
+
+    if (!isValidPhone(phone)) {
+      setError("Please enter a 10-digit mobile number.");
+      return;
+    }
+
+    setStatus("submitting");
+
+    try {
+      await apiSend("/api/enquiries", {
+        body: {
+          name,
+          phone,
+          email: email.trim() || undefined,
+          requirement: requirement || undefined,
+          location: location.trim() || undefined,
+          message,
+        },
+      });
+      setStatus("success");
+      reset();
+    } catch (err) {
+      setStatus("idle");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again or message us on WhatsApp.",
+      );
+    }
+  };
+
+  if (status === "success") {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-border/70 bg-card p-8 text-center">
+        <span className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <CheckCircle2 className="size-6" />
+        </span>
+        <h3 className="mt-4 text-lg font-semibold tracking-tight">
+          Thanks — we've got your enquiry
+        </h3>
+        <p className="mt-1.5 max-w-sm text-sm text-muted-foreground">
+          Our team will call you back shortly to discuss the furniture you
+          need. Prefer to chat now? Message us on WhatsApp.
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          className="mt-5"
+          onClick={() => setStatus("idle")}
+        >
+          Send another enquiry
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 rounded-2xl border border-border/70 bg-card p-6"
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="name">Name</Label>
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            required
+            disabled={status === "submitting"}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="phone">Phone</Label>
+          <Input
+            id="phone"
+            type="tel"
+            inputMode="numeric"
+            maxLength={10}
+            value={phone}
+            onChange={(e) => {
+              // Only digits, capped at 10.
+              setPhone(e.target.value.replace(/\D/g, "").slice(0, 10));
+            }}
+            placeholder="10-digit mobile number"
+            required
+            disabled={status === "submitting"}
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email (optional)</Label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@email.com"
+            disabled={status === "submitting"}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="requirement">What do you need?</Label>
+          <Select
+            value={requirement}
+            onValueChange={setRequirement}
+            disabled={status === "submitting"}
+          >
+            <SelectTrigger id="requirement" className="w-full">
+              <SelectValue placeholder="Choose a service" />
+            </SelectTrigger>
+            <SelectContent>
+              {REQUIREMENTS.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <Label htmlFor="location">Location</Label>
+          <button
+            type="button"
+            onClick={handleUseGps}
+            disabled={locating || status === "submitting"}
+            className="flex items-center gap-1.5 text-xs font-medium text-primary transition-colors hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {locating ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <LocateFixed className="size-3.5" />
+            )}
+            {locating ? "Detecting…" : "Use my current location"}
+          </button>
+        </div>
+        <Input
+          id="location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="Town / area — e.g. Surat, Vesu"
+          disabled={status === "submitting"}
+        />
+        {locError && <p className="text-xs text-destructive">{locError}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="message">What are you looking for?</Label>
+        <Textarea
+          id="message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Which sofa, chair or table? Sizes, colour, budget — anything helps."
+          rows={4}
+          required
+          disabled={status === "submitting"}
+        />
+      </div>
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
+
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full gap-2"
+        disabled={status === "submitting"}
+      >
+        {status === "submitting" ? (
+          <>
+            <Loader2 className="size-4 animate-spin" />
+            Sending…
+          </>
+        ) : (
+          <>
+            <Send className="size-4" />
+            Request best price
+          </>
+        )}
+      </Button>
+      <p className="text-center text-xs text-muted-foreground">
+        We'll only use your details to get back to you about your enquiry.
+      </p>
+    </form>
+  );
+}

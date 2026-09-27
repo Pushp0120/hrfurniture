@@ -1,0 +1,8 @@
+.env
+.env.local
+node_modules
+dist
+server/data/
+server-preview.log
+server-preview.log.err
+preview.pid
