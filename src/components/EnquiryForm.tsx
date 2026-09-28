@@ -257,7 +257,7 @@ export function EnquiryForm() {
           id="location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="Town / area — e.g. Surat, Vesu"
+          placeholder="Town / area — e.g. Vatva, Ahmedabad"
           disabled={status === "submitting"}
         />
         {locError && <p className="text-xs text-destructive">{locError}</p>}

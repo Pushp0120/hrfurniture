@@ -38,12 +38,18 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 
-const INSTAGRAM_URL = "https://instagram.com/hrfurniture"; // TODO: client handle
+// Contact details from the client's business card.
+const PHONE_PRIMARY = "+91 84609 75942";
+const PHONE_PRIMARY_TEL = "+918460975942";
+const PHONE_SECONDARY = "+91 70435 39676";
+const PHONE_SECONDARY_TEL = "+917043539676";
 // wa.me needs the full international format — 91 (India) + 10-digit mobile.
-const WHATSAPP_URL = "https://wa.me/919999999999"; // TODO: client WhatsApp number
-const ADDRESS = "H R Furniture, Main Road, Your City 000000"; // TODO: client address
+const WHATSAPP_URL = "https://wa.me/918460975942";
+const INSTAGRAM_URL = "https://instagram.com/hr_furniture_8";
+const ADDRESS =
+  "03, G.F., Block - D, Amber Height, Nr. Marjan Residency, Canal Road, Vatva, Ahmedabad";
 const MAP_SRC =
-  "https://www.google.com/maps?q=Surat%2C%20Gujarat%2C%20India&output=embed"; // TODO: exact showroom
+  "https://www.google.com/maps?q=Amber%20Height%2C%20Canal%20Road%2C%20Vatva%2C%20Ahmedabad%2C%20Gujarat%2C%20India&output=embed";
 
 const fadeUp = {
   initial: { opacity: 0, y: 18 },
@@ -728,10 +734,16 @@ export default function Landing() {
                 <div>
                   <p className="text-sm font-medium">Call us</p>
                   <a
-                    href="tel:+919999999999"
+                    href={`tel:${PHONE_PRIMARY_TEL}`}
                     className="mt-0.5 block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                   >
-                    +91 99999 99999
+                    {PHONE_PRIMARY}
+                  </a>
+                  <a
+                    href={`tel:${PHONE_SECONDARY_TEL}`}
+                    className="mt-0.5 block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    {PHONE_SECONDARY}
                   </a>
                 </div>
               </div>
@@ -878,7 +890,7 @@ export default function Landing() {
               </li>
               <li className="flex items-start gap-1.5">
                 <MapPin className="mt-0.5 size-3.5 shrink-0" />
-                <span>Furniture Bazaar, Your City</span>
+                <span>{ADDRESS}</span>
               </li>
               <li>
                 <Link
