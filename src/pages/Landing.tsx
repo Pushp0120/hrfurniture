@@ -38,18 +38,28 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 
-// Contact details from the client's business card.
-const PHONE_PRIMARY = "+91 84609 75942";
-const PHONE_PRIMARY_TEL = "+918460975942";
-const PHONE_SECONDARY = "+91 70435 39676";
-const PHONE_SECONDARY_TEL = "+917043539676";
-// wa.me needs the full international format — 91 (India) + 10-digit mobile.
-const WHATSAPP_URL = "https://wa.me/918460975942";
-const INSTAGRAM_URL = "https://instagram.com/hr_furniture_8";
-const ADDRESS =
-  "03, G.F., Block - D, Amber Height, Nr. Marjan Residency, Canal Road, Vatva, Ahmedabad";
-const MAP_SRC =
-  "https://www.google.com/maps?q=Amber%20Height%2C%20Canal%20Road%2C%20Vatva%2C%20Ahmedabad%2C%20Gujarat%2C%20India&output=embed";
+// Contact details + curated category catalogue (shared with /collections pages).
+import {
+  ADDRESS,
+  INSTAGRAM_URL,
+  MAP_SRC,
+  PHONE_PRIMARY,
+  PHONE_PRIMARY_TEL,
+  PHONE_SECONDARY,
+  PHONE_SECONDARY_TEL,
+  WHATSAPP_URL,
+} from "@/lib/contact";
+import { CATEGORIES, formatPrice } from "@/lib/catalog";
+
+// One hero-family photo per category — swapped for admin uploads over time.
+const categoryTiles = CATEGORIES.map((c) => ({
+  name: c.name,
+  tagline: c.tagline,
+  from: c.from,
+  img: c.tileImg,
+  alt: c.alt,
+  slug: c.slug,
+}));
 
 const fadeUp = {
   initial: { opacity: 0, y: 18 },
@@ -57,52 +67,6 @@ const fadeUp = {
   viewport: { once: true, margin: "-80px" },
   transition: { duration: 0.5 },
 } as const;
-
-// One hero-family photo per category — swapped for admin uploads over time.
-const categoryTiles = [
-  {
-    name: "Sofas",
-    tagline: "3-seater, L-shaped & designer sets",
-    from: 18999,
-    img: "/client-photos/img-34.jpg",
-    alt: "Premium sofa set at H R Furniture",
-  },
-  {
-    name: "Beds",
-    tagline: "Storage beds & mattresses",
-    from: 12499,
-    img: "/client-photos/img-18.jpg",
-    alt: "Designer bed with storage at H R Furniture",
-  },
-  {
-    name: "Dining & Tables",
-    tagline: "4/6/8-seater sets & center tables",
-    from: 9999,
-    img: "/client-photos/img-01.jpg",
-    alt: "Marble-top dining table at H R Furniture",
-  },
-  {
-    name: "Chairs",
-    tagline: "Dining, lounge & office chairs",
-    from: 2499,
-    img: "/client-photos/img-07.jpg",
-    alt: "Premium chairs at H R Furniture",
-  },
-  {
-    name: "Wardrobes",
-    tagline: "Sliding doors, dressers & storage",
-    from: 14999,
-    img: "/client-photos/img-17.jpg",
-    alt: "Sliding wardrobe at H R Furniture",
-  },
-  {
-    name: "Room Combos",
-    tagline: "Full bedroom & living bundles",
-    from: 34999,
-    img: "/client-photos/img-20.jpg",
-    alt: "Complete bedroom set at H R Furniture",
-  },
-];
 
 const benefits = [
   {
@@ -159,10 +123,6 @@ const faqs = [
     a: "Every piece carries a frame and workmanship warranty (terms vary by product). If anything goes wrong, message us — the same people who sold it to you will fix it.",
   },
 ];
-
-function formatPrice(value: number) {
-  return `₹${value.toLocaleString("en-IN")}`;
-}
 
 /** Picks a fitting lucide icon from the category name (admin-editable). */
 function ProductIcon({ name }: { name: string }) {
@@ -359,11 +319,13 @@ export default function Landing() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categoryTiles.map((cat, index) => (
-            <motion.a
+            <motion.div
               key={cat.name}
-              href="#contact"
               {...fadeUp}
               transition={{ duration: 0.45, delay: index * 0.06 }}
+            >
+            <Link
+              to={`/collections/${cat.slug}`}
               className="group relative block overflow-hidden rounded-2xl border border-border/70"
             >
               <img
@@ -386,7 +348,8 @@ export default function Landing() {
                   <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
               </div>
-            </motion.a>
+            </Link>
+            </motion.div>
           ))}
         </div>
       </section>
