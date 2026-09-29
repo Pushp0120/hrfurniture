@@ -25,7 +25,6 @@ import {
   MapPin,
   MessageCircle,
   Phone,
-  Sparkles,
 } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router";
@@ -89,10 +88,9 @@ export default function Collection() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 text-center">
         <Badge variant="outline" className="border-border/70">
           404
-        </Badge>
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight">
-          Collection not found
-        </h1>
+        </Badge>            <h1 className="mt-4 font-serif text-3xl font-semibold tracking-tight">
+              Collection not found
+            </h1>
         <p className="mt-2 text-muted-foreground">
           The collection you're looking for doesn't exist — browse the full
           range on our home page.
@@ -113,16 +111,6 @@ export default function Collection() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Announcement strip */}
-      <div className="bg-primary text-primary-foreground">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-center gap-2 px-5 py-2 text-center text-xs font-medium tracking-wide sm:text-sm">
-          <Sparkles className="size-3.5 text-accent" />
-          <span>
-            Monsoon Sale — up to 30% off on sofa sets · Free home delivery in city
-          </span>
-        </div>
-      </div>
-
       {/* Nav */}
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5">
@@ -146,50 +134,35 @@ export default function Collection() {
         </div>
       </header>
 
-      {/* Category hero */}
-      <section className="relative overflow-hidden">
-        <img
-          src={category.tileImg}
-          alt={category.alt}
-          className="absolute inset-0 h-full w-full object-cover"
-          loading="eager"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/25" />
-        <div className="relative mx-auto w-full max-w-6xl px-5 py-20 lg:py-28">
+      {/* Category hero — bright catalogue style */}
+      <section className="border-b border-border/60 bg-secondary/60">
+        <div className="mx-auto w-full max-w-6xl px-5 py-16 lg:py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-2xl text-white"
+            className="max-w-2xl"
           >
-            <Badge
-              variant="outline"
-              className="border-white/30 bg-white/10 text-white backdrop-blur"
-            >
+            <Badge variant="outline" className="border-accent/40 bg-background/70">
               Collection
             </Badge>
-            <h1 className="mt-4 text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
+            <h1 className="mt-4 font-serif text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
               {category.name}
             </h1>
-            <p className="mt-4 text-base leading-7 text-white/85 sm:text-lg">
+            <p className="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">
               {category.blurb}
             </p>
             <p className="mt-4 text-sm font-medium uppercase tracking-[0.16em] text-accent">
               Starting at {formatPrice(category.from)}
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Button asChild size="lg" className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+              <Button asChild size="lg" className="gap-2">
                 <a href={waLink(`Hi H R Furniture, I'm interested in your ${category.name.toLowerCase()} collection. Please share today's best price.`)} target="_blank" rel="noopener noreferrer">
                   <WhatsAppIcon className="size-4" />
                   Ask price on WhatsApp
                 </a>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="gap-2 border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white"
-              >
+              <Button asChild size="lg" variant="outline">
                 <Link to="/#contact">Get best price</Link>
               </Button>
             </div>
@@ -204,7 +177,7 @@ export default function Collection() {
             <Badge variant="outline" className="border-border/70">
               In stock &amp; on display
             </Badge>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+            <h2 className="mt-3 font-serif text-2xl font-semibold tracking-tight sm:text-3xl">
               {category.name} at our showroom
             </h2>
             <p className="mt-2 max-w-xl text-sm text-muted-foreground sm:text-base">
@@ -221,7 +194,7 @@ export default function Collection() {
       <section className="border-t border-border/60 bg-muted/30">
         <div className="mx-auto w-full max-w-6xl px-5 py-14">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+            <h2 className="font-serif text-xl font-semibold tracking-tight sm:text-2xl">
               Browse other collections
             </h2>
             <div className="hidden gap-2 sm:flex">
@@ -278,7 +251,7 @@ export default function Collection() {
             <Badge variant="outline" className="border-border/70">
               Visit us
             </Badge>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+            <h2 className="mt-3 font-serif text-2xl font-semibold tracking-tight sm:text-3xl">
               See it in person
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">

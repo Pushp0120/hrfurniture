@@ -30,7 +30,6 @@ import {
   Quote,
   ShieldCheck,
   Sofa,
-  Sparkles,
   Star,
   Truck,
   UtensilsCrossed,
@@ -147,16 +146,6 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Announcement strip */}
-      <div className="bg-primary text-primary-foreground">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-center gap-2 px-5 py-2 text-center text-xs font-medium tracking-wide sm:text-sm">
-          <Sparkles className="size-3.5 text-accent" />
-          <span>
-            Monsoon Sale — up to 30% off on sofa sets · Free home delivery in city
-          </span>
-        </div>
-      </div>
-
       {/* Nav */}
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5">
@@ -221,56 +210,44 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* Hero — full-bleed dark showroom image with editorial overlay */}
-      <section id="top" className="relative scroll-mt-20 overflow-hidden">
-        <img
-          src="/client-photos/img-36.jpg"
-          alt="Premium living room furniture at the H R Furniture showroom"
-          className="absolute inset-0 h-full w-full object-cover"
-          loading="eager"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/25" />
-        <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-5 py-24 lg:grid-cols-[1.1fr_0.9fr] lg:py-36">
+      {/* Hero — bright furniture-catalogue look: warm wash + golden gradient panel */}
+      <section id="top" className="relative scroll-mt-20 overflow-hidden bg-secondary/60">
+        <div className="pointer-events-none absolute -right-32 -top-32 size-[28rem] rounded-full bg-accent/25 blur-3xl" />
+        <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-5 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-white"
           >
             <Badge
               variant="outline"
-              className="border-white/30 bg-white/10 text-white backdrop-blur"
+              className="border-accent/40 bg-background/70 text-foreground backdrop-blur"
             >
               <MapPin className="mr-1.5 size-3.5 text-accent" />
-              Premium furniture showroom
+              Premium furniture showroom — Vatva, Ahmedabad
             </Badge>
-            <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="mt-5 font-serif text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
               Furniture for every room,
               <span className="text-accent"> priced for every family</span>.
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-white/85 sm:text-lg">
+            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
               Sofas you sink into, beds built to last, dining sets that anchor
               the room and wardrobes that fit it all — hand-picked by H R
               Furniture, delivered to your door.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button asChild size="lg" className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+              <Button asChild size="lg" className="gap-2">
                 <a href="#contact">
                   Get best price
                   <ArrowRight className="size-4" />
                 </a>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="gap-2 border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white"
-              >
+              <Button asChild size="lg" variant="outline" className="gap-2">
                 <a href="#collections">Browse collections</a>
               </Button>
             </div>
             {reviews && reviews.length > 0 && (
-              <div className="mt-6 flex items-center gap-3 text-sm text-white/80">
+              <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
                 <Stars value={avgRating} />
                 <span>
                   {avgRating.toFixed(1)} from {reviews.length} review
@@ -278,6 +255,29 @@ export default function Landing() {
                 </span>
               </div>
             )}
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="relative"
+          >
+            <div className="overflow-hidden rounded-3xl border border-border/70 bg-card shadow-xl shadow-primary/10 ring-1 ring-accent/20">
+              <img
+                src="/client-photos/img-36.jpg"
+                alt="Premium living room furniture at the H R Furniture showroom"
+                className="aspect-[4/3] w-full object-cover"
+                loading="eager"
+              />
+            </div>
+            <div className="absolute -bottom-5 left-6 rounded-2xl border border-border/70 bg-card/95 px-5 py-3 shadow-lg backdrop-blur">
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                Sofa sets from
+              </p>
+              <p className="font-serif text-xl font-semibold text-primary">
+                {formatPrice(18999)}
+              </p>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -288,7 +288,9 @@ export default function Landing() {
           {["Ready stock available", "Free home delivery*", "Best price promise", "Warranty included"].map(
             (item) => (
               <div key={item} className="flex items-center gap-2">
-                <Check className="size-4 shrink-0 text-accent" />
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent/20">
+                  <Check className="size-3.5 text-accent-foreground" />
+                </span>
                 <span className="font-medium">{item}</span>
               </div>
             ),
@@ -306,7 +308,7 @@ export default function Landing() {
             <Badge variant="outline" className="border-border/70">
               Collections
             </Badge>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
               Shop by category
             </h2>
             <p className="mt-3 text-muted-foreground">
@@ -361,7 +363,7 @@ export default function Landing() {
             <Badge variant="outline" className="border-border/70 bg-background">
               Best prices
             </Badge>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
               Starting prices — updated by us, always current
             </h2>
             <p className="mt-3 text-muted-foreground">
@@ -421,7 +423,7 @@ export default function Landing() {
           <Badge variant="outline" className="border-border/70">
             Gallery
           </Badge>
-          <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
             Fresh arrivals &amp; real stock
           </h2>
           <p className="mt-3 text-muted-foreground">
@@ -432,28 +434,26 @@ export default function Landing() {
         </motion.div>
 
         {gallery && gallery.length > 0 ? (
-          <div className="mt-10 columns-2 gap-4 sm:columns-3 [column-fill:_balance]">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {gallery.map((image, index) => (
-              <motion.div
+              <motion.figure
                 key={image._id}
                 {...fadeUp}
                 transition={{ duration: 0.45, delay: (index % 6) * 0.03 }}
-                className="group relative mb-4 break-inside-avoid overflow-hidden rounded-2xl border border-border/70 bg-card"
+                className="group overflow-hidden rounded-2xl border border-border/70 bg-card"
               >
                 {image.url && (
                   <img
                     src={image.url}
                     alt={image.title}
-                    className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
                 )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                  <p className="text-sm font-medium text-white">
-                    {image.title}
-                  </p>
-                </div>
-              </motion.div>
+                <figcaption className="truncate border-t border-border/60 px-4 py-3 text-sm font-medium text-foreground/90">
+                  {image.title}
+                </figcaption>
+              </motion.figure>
             ))}
           </div>
         ) : (
@@ -479,7 +479,7 @@ export default function Landing() {
             <Badge variant="outline" className="border-border/70 bg-background">
               Why H R Furniture
             </Badge>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
               A showroom that treats you like family
             </h2>
             <p className="mt-3 text-muted-foreground">
@@ -526,15 +526,15 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="bg-foreground text-background">
+      {/* Stats — light band with gold numerals */}
+      <section className="border-y border-border/60 bg-card">
         <div className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-8 px-5 py-12 sm:grid-cols-4">
           {stats.map((stat) => (
-            <div key={stat.label}>
-              <p className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            <div key={stat.label} className="text-center">
+              <p className="font-serif text-3xl font-semibold tracking-tight text-primary sm:text-4xl">
                 {stat.value}
               </p>
-              <p className="mt-1 text-sm text-background/70">{stat.label}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -546,9 +546,9 @@ export default function Landing() {
           <Badge variant="outline" className="border-border/70">
             How it works
           </Badge>
-          <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-            From browsing to your living room, in four steps
-          </h2>
+          <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
+              From browsing to your living room, in four steps
+            </h2>
         </motion.div>
         <div className="mt-10 grid gap-6 md:grid-cols-4">
           {steps.map((step, index) => (
@@ -581,7 +581,7 @@ export default function Landing() {
             <Badge variant="outline" className="border-border/70 bg-background">
               Reviews
             </Badge>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
               What our customers say
             </h2>
           </motion.div>
@@ -639,7 +639,7 @@ export default function Landing() {
           <Badge variant="outline" className="border-border/70">
             FAQ
           </Badge>
-          <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
             Questions, answered
           </h2>
         </motion.div>
@@ -666,7 +666,7 @@ export default function Landing() {
             <Badge variant="outline" className="border-border/70 bg-background">
               Find us
             </Badge>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
               Visit the showroom
             </h2>
             <div className="mt-6 space-y-5">
@@ -760,7 +760,7 @@ export default function Landing() {
             <Badge variant="outline" className="border-border/70">
               Get best price
             </Badge>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
               Tell us what your home needs
             </h2>
             <p className="mt-3 text-muted-foreground">
@@ -791,12 +791,12 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/60">
+      <footer className="border-t border-border/60 bg-card">
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-5 py-12 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2">
             <div className="flex min-w-0 items-center gap-2.5">
               <BrandLogo />
-              <span className="truncate text-sm font-semibold tracking-tight sm:text-base">
+              <span className="truncate font-serif text-base font-semibold tracking-tight">
                 H R FURNITURE
               </span>
             </div>
@@ -805,25 +805,23 @@ export default function Landing() {
               honest showroom prices. Visit us, try the comfort, and furnish
               your home with pieces built to last.
             </p>
+            <p className="mt-4 text-xs uppercase tracking-[0.18em] text-accent">
+              Premium Sofas and Premium Chairs
+            </p>
           </div>
           <div>
-            <p className="text-sm font-semibold">Explore</p>
+            <p className="text-sm font-semibold">Collections</p>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li>
-                <a href="#collections" className="hover:text-foreground">
-                  Collections
-                </a>
-              </li>
-              <li>
-                <a href="#gallery" className="hover:text-foreground">
-                  Gallery
-                </a>
-              </li>
-              <li>
-                <a href="#reviews" className="hover:text-foreground">
-                  Reviews
-                </a>
-              </li>
+              {categoryTiles.map((cat) => (
+                <li key={cat.slug}>
+                  <Link
+                    to={`/collections/${cat.slug}`}
+                    className="hover:text-foreground"
+                  >
+                    {cat.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
@@ -851,6 +849,11 @@ export default function Landing() {
                   Instagram
                 </a>
               </li>
+              <li>
+                <a href={`tel:${PHONE_PRIMARY_TEL}`} className="hover:text-foreground">
+                  {PHONE_PRIMARY}
+                </a>
+              </li>
               <li className="flex items-start gap-1.5">
                 <MapPin className="mt-0.5 size-3.5 shrink-0" />
                 <span>{ADDRESS}</span>
@@ -869,7 +872,7 @@ export default function Landing() {
         <div className="border-t border-border/60">
           <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-2 px-5 py-5 text-xs text-muted-foreground sm:flex-row">
             <p>© {new Date().getFullYear()} H R Furniture. All rights reserved.</p>
-            <p>Craftsmanship · Comfort · Trust</p>
+            <p>Mon–Sun, 10am – 9pm · Craftsmanship · Comfort · Trust</p>
           </div>
         </div>
       </footer>

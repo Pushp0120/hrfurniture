@@ -62,8 +62,8 @@ export const CATEGORIES: CatalogCategory[] = [
     blurb:
       "Box-storage and hydraulic beds with tall upholstered headboards — king and queen sizes, paired with comfortable mattresses at honest rates.",
     from: 12499,
-    tileImg: p(18),
-    alt: "Designer bed with storage at H R Furniture",
+    tileImg: p(19),
+    alt: "Premium upholstered bed at H R Furniture",
     items: [
       { img: p(18), title: "Box-storage bed with dresser — walnut" },
       { img: p(19), title: "Upholstered bed with patterned bedding — ivory" },
