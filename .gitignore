@@ -6,3 +6,6 @@ server/data/
 server-preview.log
 server-preview.log.err
 preview.pid
+
+.vercel
+.env*
