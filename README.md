@@ -13,10 +13,12 @@ external storage service).
 ## Features
 
 **Public site (`/`)**
-- Premium homepage: dark full-bleed showroom hero, category tiles (Sofas,
-  Beds, Dining, Chairs, Wardrobes, Combos), admin-editable starting prices,
-  gallery of real stock photos, why-us, stats, process, reviews, FAQ,
-  location and contact.
+- Premium homepage: bright furniture-catalogue hero with floating price card,
+  category tiles (Sofas, Beds, Dining, Chairs, Wardrobes, Combos),
+  admin-editable starting prices, uniform gallery of real stock photos,
+  why-us, stats, process, reviews, FAQ, location and contact.
+- **Collection pages (`/collections/:slug`)** — one page per category with a
+  curated photo grid and a per-item WhatsApp "ask price" button.
 - **Reviews** — customers leave a star-rated review; it appears after the
   admin approves it.
 - **Google Map** embed, **Instagram** and **WhatsApp** (wa.me) buttons.
@@ -53,10 +55,12 @@ public/
   client-photos/   # 56 client-supplied showroom photos (seeded into the gallery)
 src/
   lib/api.ts       # Frontend API client
+  lib/catalog.ts   # Curated per-category catalogue (collection pages)
+  lib/contact.ts   # Shared contact constants (phones, WhatsApp, address)
   components/      # BrandLogo, ReviewForm, Stars, EnquiryForm, ui/*
-  pages/           # Landing.tsx, Admin.tsx, NotFound.tsx
+  pages/           # Landing.tsx, Collection.tsx, Admin.tsx, NotFound.tsx
   main.tsx         # routes
-  index.css        # theme tokens (espresso + gold premium palette)
+  index.css        # theme tokens (ivory + espresso + gold premium palette)
 ```
 
 ## Getting started (zero database setup)
@@ -73,18 +77,16 @@ for a factory reset.
 
 ## Production
 
-```bash
-npm run build       # typecheck + build the SPA into dist/
-npm start           # Express serves dist/ and the API on one port (3001)
-```
+Live at **https://hrfurnituree.vercel.app** (Vercel project `hrfurniture`,
+Neon database attached via the Storage integration, which injects
+`DATABASE_URL`). Every push to `main` deploys automatically via the
+connected GitHub repo.
 
-Set these env vars in production:
+Env vars in production:
 
-- `DATABASE_URL` — Postgres connection string (Neon on Vercel)
+- `DATABASE_URL` — injected automatically by the Neon storage integration
 - `ADMIN_USERNAME` / `ADMIN_PASSWORD` — the admin login
-- `PORT` — defaults to 3001
-- `PUBLIC_API_BASE` — optional; public origin of the API
-- `VITE_API_URL` — build-time; API base URL when it differs from the SPA origin
+- `PORT`, `PUBLIC_API_BASE`, `VITE_API_URL` — optional
 
 ## Deploy free on Vercel — with Neon
 
@@ -111,6 +113,7 @@ first), and functions cold-start after inactivity (1–2 s first API call).
 | Path | Description |
 | --- | --- |
 | `/` | Marketing homepage |
+| `/collections/:slug` | Category collection page (sofas, beds, dining, chairs, wardrobes, room-combos) |
 | `/admin` | Admin control panel |
 
 ## API overview
@@ -145,10 +148,3 @@ Exactly **one** admin account, configured via environment variables (see
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=Admin@123   # CHANGE THIS before going live
 ```
-
-## Client details still to fill in (TODOs in the code)
-
-- `src/pages/Landing.tsx` — Instagram handle, WhatsApp number, address,
-  map location (search for `TODO`)
-- Showroom photos are pre-seeded from the client's WhatsApp images; the admin
-  can delete/replace any of them
